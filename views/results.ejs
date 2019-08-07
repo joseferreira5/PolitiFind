@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include partials/head %>
+</head>
+<body>
+    <% include partials/navbar %>
+
+    <% if (candidates.length) { %>
+            <ul>
+              <% candidates.forEach(function (candidates) { %>
+                <li data-id='<%= candidates.id %>' class="list-group-item">
+                  <a href='<%= examples.id %>'><%= examples.name %></a>
+                  <button class="btn btn-danger float-right delete">ｘ</button>
+                </li>
+              <% }) %>
+            </ul>
+          <% }; %>
+
+    <% include partials/script %>
+</body>
+</html>

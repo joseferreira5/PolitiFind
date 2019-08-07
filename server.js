@@ -1,8 +1,6 @@
 require("dotenv").config();
 var express = require("express");
 var path = require("path");
-//var exphbs = require("express-handlebars");
-var ejs = require("ejs");
 
 var db = require("./models");
 
@@ -14,15 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
 
-// Handlebars
-/* app.engine(
-  "handlebars",
-  exphbs({
-    defaultLayout: "main"
-  })
-); */
-
-// EJS
+// EJS template engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
