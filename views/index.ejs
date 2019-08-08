@@ -10,15 +10,15 @@
 
   <div id="home">
     <div class="container">
-      <img src="#" class="rounded mx-auto d-block mt-5" height="200px" width="200" alt="american flag">
+      <img src="img/flag-icon.png" class="mx-auto d-block mt-5" height="200px" width="200px" alt="american flag">
       <div class="row">
         <div class="col-8 offset-2">
-          <form class="clearfix mb-4" action="GET">
+          <form id="submit" class="clearfix mb-4" action="/results">
             <div class="form-group mt-5">
-              <input type="text" id="user-address" class="form-control" aria-describedby="user-address"
+              <input type="text" name="userAddress" id="user-address" class="form-control" aria-describedby="user-address"
                 placeholder="Enter your address here">
             </div>
-            <button id="submit" class="btn btn-primary float-right">Submit</button>
+            <button class="btn btn-danger float-right">Submit</button>
           </form>
         </div>
       </div>
