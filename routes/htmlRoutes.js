@@ -19,12 +19,13 @@ module.exports = function(app) {
       { json: true }
     )
       .then(function(response) {
-        console.log(response.body);
         var body = response.body;
         var results = {
           candidates: body.contests ? body.contests[0].candidates : [],
           pollingLocations: body.pollingLocations,
-          contests: body.contests
+          contests: body.contests[0],
+          election: body.election,
+          apiKey: process.env.CIVIC_KEY
         };
         //console.log(response.body.contests[0].candidates[0]);
         res.render("results", { results: results });

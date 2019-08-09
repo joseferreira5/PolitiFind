@@ -7,25 +7,27 @@
     <% include partials/navbar %>
 
     <div class="container mt-5">
+      <h1> <%= results.election.name %> <%= results.election.electionDay %> </h1>
+      <h3> The following candidates will be running for <%= results.contests.office %> </h3>
       <div class="row">
         <% if (results.candidates.length) { %>
           <% results.candidates.forEach(function (candidate) { %>
-            <div class="card border-light col-sm-4">
+            <div class="card text-center mr-3 col-sm-2">
               <img src=<%= candidate.photoUrl %> class="card-img-top" alt="...">
               <div class="card-body">
-                <h5 class="card-title text-center"><%= candidate.name %></h5>
-                <h6 class="card-title text-center">Party: <%= candidate.party %></h6>
-                  <div class="clear-fix container">
-                    <a href="#" class="btn btn-primary float-left">See Info</a>
-                    <a href="#" class="btn btn-primary float-right">Select</a>
-                  </div>
+                <h5 class="card-title"><%= candidate.name %></h5>
+                <h6 class="card-title">Party: <%= candidate.party %></h6>
+                <a href="#" class="btn btn-primary">See Info</a>
+                <a href="#" class="btn btn-primary mt-2">Select</a>
               </div>
             </div>
           <% }) %>
         <% } else { %>
-          <h1>nothing</h1>
+          <h1>Currently there is no information about upcoming elections in your district.</h1>
         <% } %>
       </div>
+
+      <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=<% results.CIVIC_KEY %>&q=Space+Needle,Seattle+WA" allowfullscreen></iframe>x
     </div>
 
     <% include partials/script %>
