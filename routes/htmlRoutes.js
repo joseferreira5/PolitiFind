@@ -1,28 +1,43 @@
-var db = require("../models");
+// var db = require("../models");
+var got = require("got");
+require("dotenv");
 
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    db.Example.findAll({}).then(function(dbExamples) {
-      res.render("index", {
-        msg: "Welcome!",
-        examples: dbExamples
-      });
-    });
+    res.render("index");
   });
 
-  // Load example page and pass in an example by id
-  app.get("/example/:id", function(req, res) {
-    // eslint-disable-next-line prettier/prettier
-    db.Example.findOne({ where: { id: req.params.id } }).then(function(dbExample) {
-      res.render("example", {
-        example: dbExample
-      });
-    });
-  });
+  app.get("/results", function(req, res) {
+    var userAddress = req.query.userAddress;
 
-  // Render 404 page for any unmatched routes
-  app.get("*", function(req, res) {
-    res.render("404");
+    got(
+      "https://www.googleapis.com/civicinfo/v2/voterinfo?address=" +
+        userAddress +
+        "&electionId=2000&officialOnly=true&returnAllAvailableData=true&key=" +
+        process.env.CIVIC_KEY,
+      { json: true }
+    )
+      .then(function(response) {
+        var body = response.body;
+        var results = {
+          candidates: body.contests ? body.contests[0].candidates : [],
+          pollingLocations: body.pollingLocations,
+          contests: body.contests[0],
+          election: body.election,
+          apiKey: process.env.CIVIC_KEY
+        };
+        //console.log(response.body.contests[0].candidates[0]);
+        res.render("results", { results: results });
+      })
+      .catch(function(e) {
+        console.error(e);
+        res.redirect("/?error");
+      });
+
+    // Render 404 page for any unmatched routes
+    app.get("*", function(req, res) {
+      res.render("404");
+    });
   });
 };
