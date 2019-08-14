@@ -8,9 +8,9 @@ module.exports = function(app) {
     res.render("index");
   });
 
+  // Loads results page
   app.get("/results", function(req, res) {
     var userAddress = req.query.userAddress;
-
     got(
       "https://www.googleapis.com/civicinfo/v2/voterinfo?address=" +
         userAddress +
@@ -18,26 +18,34 @@ module.exports = function(app) {
         process.env.CIVIC_KEY,
       { json: true }
     )
-      .then(function(response) {
-        var body = response.body;
-        var results = {
-          candidates: body.contests ? body.contests[0].candidates : [],
-          pollingLocations: body.pollingLocations,
-          contests: body.contests[0],
-          election: body.election,
-          apiKey: process.env.CIVIC_KEY
-        };
-        //console.log(response.body.contests[0].candidates[0]);
-        res.render("results", { results: results });
+      .then(function(res1) {
+        got(
+          "https://www.googleapis.com/civicinfo/v2/representatives?address=" +
+            userAddress +
+            "&key=" +
+            process.env.CIVIC_KEY,
+          { json: true }
+        ).then(function(res2) {
+          var local = res1.body;
+          var reps = res2.body;
+          var data = {
+            candidates: local.contests ? local.contests[0].candidates : [],
+            pollingLocations: local.pollingLocations,
+            contests: local.contests[0],
+            election: local.election,
+            officials: reps.officials
+          };
+          res.render("results", { data: data });
+        });
       })
       .catch(function(e) {
         console.error(e);
         res.redirect("/?error");
       });
+  });
 
-    // Render 404 page for any unmatched routes
-    app.get("*", function(req, res) {
-      res.render("404");
-    });
+  // Render 404 page for any unmatched routes
+  app.get("*", function(req, res) {
+    res.render("404");
   });
 };
