@@ -7,13 +7,13 @@
     <% include partials/navbar %>
 
     <div class="container mt-5">
-      <h1>  Results for <%= results.election.name %> on <%= results.election.electionDay %> </h1>
-      <h3> The following candidates will be running for <%= results.contests.office %> </h3>
+      <h1>  Results for <%= data.election.name %> on <%= data.election.electionDay %> </h1>
+      <h3> The following candidates will be running for <%= data.contests.office %> </h3>
       <div class="row">
-        <% if (results.candidates.length) { %>
-          <% results.candidates.forEach(function (candidate) { %>
+        <% if (data.candidates.length) { %>
+          <% data.candidates.forEach(function (candidate) { %>
             <div class="card text-center mr-3 col-sm-2">
-              <img src=<%= candidate.photoUrl %> class="card-img-top" alt="...">
+              <img src="<%= candidate.photoUrl %>"  class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title"><%= candidate.name %></h5>
                 <h6 class="card-title">Party: <%= candidate.party %></h6>
@@ -24,10 +24,24 @@
           <% }) %>
         <% } else { %>
           <h1>Currently there is no information about upcoming elections in your district.</h1>
-        <% } %>
+        <% }; %>
       </div>
-      ]
-    <% include partials/reps %>
+    
+    <div class="container mt-5">
+      <h3> Your Current Elected Officials </h3>
+      <div class="row">
+        <% if (data.officials.length) { %>
+          <% data.officials.forEach(function (official) { %>
+            <div class="card text-center mr-3 col-sm-2">
+              <img src="<%= official.photoUrl %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title"><%= official.name %></h5>
+                <h6 class="card-title">Party: <%= official.party %></h6>
+              </div>
+            </div>
+          <% }) %>
+        <% }; %>
+      </div>
     
     </div>
 

@@ -7,9 +7,10 @@ module.exports = function(app) {
   app.get("/", function(req, res) {
     res.render("index");
   });
-  app.get("/results", function(req, res, next) {
+
+  // Loads results page
+  app.get("/results", function(req, res) {
     var userAddress = req.query.userAddress;
-    // Get local candidates
     got(
       "https://www.googleapis.com/civicinfo/v2/voterinfo?address=" +
         userAddress +
@@ -17,46 +18,29 @@ module.exports = function(app) {
         process.env.CIVIC_KEY,
       { json: true }
     )
-      .then(function(response) {
-        var body = response.body;
-        var results = {
-          candidates: body.contests ? body.contests[0].candidates : [],
-          pollingLocations: body.pollingLocations,
-          contests: body.contests[0],
-          election: body.election,
-          apiKey: process.env.CIVIC_KEY
-        };
-        res.render("results", { results: results });
+      .then(function(res1) {
+        got(
+          "https://www.googleapis.com/civicinfo/v2/representatives?address=" +
+            userAddress +
+            "&key=" +
+            process.env.CIVIC_KEY,
+          { json: true }
+        ).then(function(res2) {
+          var local = res1.body;
+          var reps = res2.body;
+          var data = {
+            candidates: local.contests ? local.contests[0].candidates : [],
+            pollingLocations: local.pollingLocations,
+            contests: local.contests[0],
+            election: local.election,
+            officials: reps.officials
+          };
+          res.render("results", { data: data });
+        });
       })
       .catch(function(e) {
         console.error(e);
         res.redirect("/?error");
-      });
-    next();
-  });
-
-  app.get("/results", function(req, res) {
-    var userAddress = req.query.userAddress;
-    got(
-      "https://www.googleapis.com/civicinfo/v2/representatives?address=" +
-        userAddress +
-        "&key=" +
-        process.env.CIVIC_KEY,
-      { json: true }
-    )
-      .then(function(response) {
-        var body = response.body;
-        console.log("body");
-        var reps = {
-          repName: body.name,
-          imageUrl: body.photoUrl,
-          politicalParty: body.party,
-          apiKey: process.env.CIVIC_KEY
-        };
-        res.render("reps", { reps: reps });
-      })
-      .catch(function(e) {
-        console.error(e);
       });
   });
 
