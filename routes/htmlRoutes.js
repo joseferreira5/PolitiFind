@@ -1,5 +1,6 @@
 // var db = require("../models");
 var got = require("got");
+var moment = require("moment");
 require("dotenv");
 
 module.exports = function(app) {
@@ -30,10 +31,14 @@ module.exports = function(app) {
           var reps = res2.body;
           var data = {
             candidates: local.contests ? local.contests[0].candidates : [],
-            pollingLocations: local.pollingLocations,
+            pollingLocations: local.pollingLocations[0].address,
             contests: local.contests[0],
             election: local.election,
-            officials: reps.officials
+            electionDate: moment(local.election.electionDay).format(
+              "MMMM Do, YYYY"
+            ),
+            officials: reps.officials,
+            offices: reps.offices.name
           };
           res.render("results", { data: data });
         });
