@@ -7,13 +7,17 @@
     <% include partials/navbar %>
 
     <div class="container mt-5">
-      <h1>  Results for <%= data.election.name %> on <%= data.election.electionDay %> </h1>
+      <h2>  Showing results for the <%= data.election.name %> on <%= data.electionDate %> </h2>
       <h3> The following candidates will be running for <%= data.contests.office %> </h3>
       <div class="row">
         <% if (data.candidates.length) { %>
           <% data.candidates.forEach(function (candidate) { %>
             <div class="card text-center mr-3 col-sm-2">
-              <img src="<%= candidate.photoUrl %>"  class="card-img-top" alt="...">
+              <% if (candidate.photoUrl) { %>
+              <img src="<%= candidate.photoUrl %>" class="card-img-top" alt="...">
+              <% } else { %>
+              <img src="https://loremflickr.com/320/240/person" class="card-img-top" alt="...">
+              <% } %>
               <div class="card-body">
                 <h5 class="card-title"><%= candidate.name %></h5>
                 <h6 class="card-title">Party: <%= candidate.party %></h6>
@@ -31,18 +35,28 @@
       <h3> Your Current Elected Officials </h3>
       <div class="row">
         <% if (data.officials.length) { %>
-          <% data.officials.forEach(function (official) { %>
-            <div class="card text-center mr-3 col-sm-2">
-              <img src="<%= official.photoUrl %>" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title"><%= official.name %></h5>
-                <h6 class="card-title">Party: <%= official.party %></h6>
+            <% data.officials.forEach(function (official) { %>
+              <div class="card text-center mr-3 mt-3 col-sm-2">
+                <% if (official.photoUrl) { %>
+                <img src="<%= official.photoUrl %>" class="card-img-top" alt="...">
+                <% } else { %>
+                <img src="https://loremflickr.com/320/240/politician" class="card-img-top" alt="...">
+                <% } %>
+                <div class="card-body">
+                  <h5 class="card-title"><%= official.name %></h5>
+                  <h6 class="card-title">Party: <%= official.party %></h6>
+                </div>
               </div>
-            </div>
-          <% }) %>
+            <% }) %>
         <% }; %>
       </div>
-    
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <h3><strong>Your polling location</strong></h3>
+        <p><strong>Location Name: </strong><%= data.pollingLocations.locationName %></p>
+        <p><strong>Address: </strong><%= data.pollingLocations.line1 %> <%= data.pollingLocations.city %> <% data.pollingLocations.state %> 
+        <% data.pollingLocations.zip %> </p>
     </div>
 
     <% include partials/script %>
